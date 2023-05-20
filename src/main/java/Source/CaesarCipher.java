@@ -7,10 +7,10 @@ import java.nio.file.Path;
 
 public class CaesarCipher {
     private static final CaesarCipher CAESARCIPHER = new CaesarCipher();
-    private TypeOfCommandEnum command; // присвоить команду после валидации
-    private int key; // присвоить ключ после валидации
-    private Path path; // присвоить путь после валидации
-    private TypeOfLanguageEnum language; // присвоить язык после проверки.
+    private TypeOfCommandEnum command;
+    private int key;
+    private Path path;
+    private TypeOfLanguageEnum language;
 
     private CaesarCipher() {}
 

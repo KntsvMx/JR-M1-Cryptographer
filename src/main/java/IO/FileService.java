@@ -1,16 +1,24 @@
 package IO;
 
-import CommLineArgsValidation.PathValidator;
 import Source.CaesarCipher;
+
+import java.nio.file.Path;
+import java.util.List;
 
 public class FileService {
     private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
-    private InputFromFIle inputFromFIle;
-    private OutputToFile outputToFile;
-    private
+    private final InputFromFIle inputFromFIle = new InputFromFIle(caesarCipher.getPath());
+    private final OutputToFile outputToFile = new OutputToFile(caesarCipher.getPath());
 
+    private List<String> lines;
 
-    public void readToBuffer() {
-        inputFromFIle = new InputFromFIle(caesarCipher.getPath());
+    public List<String> readFromFile() {
+        lines = inputFromFIle.readFile();
+        return lines;
+    }
+
+    public void writeToFileWithTag() {
+        outputToFile.nameOfFile(caesarCipher.getCommand());
+        outputToFile.writeToFile();
     }
 }

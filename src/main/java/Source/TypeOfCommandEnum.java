@@ -3,7 +3,7 @@ package Source;
 import Encryption.BruteForce;
 
 public enum TypeOfCommandEnum {
-    BRUTE_FROCE,
+    BRUTE_FORCE,
     ENCRYPT,
     DECRYPT
 }

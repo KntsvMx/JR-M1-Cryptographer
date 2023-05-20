@@ -18,10 +18,10 @@ public class Runner {
             throw new RuntimeException("Validation have benn wrong.");
 
         if (caesarCipher.getCommand().equals(TypeOfCommandEnum.ENCRYPT)) {
-//            fileService
+            fileService.readFromFile();
         } else if (caesarCipher.getCommand().equals(TypeOfCommandEnum.DECRYPT)) {
 
-        } else if (caesarCipher.getCommand().equals(TypeOfCommandEnum.BRUTE_FROCE)) {
+        } else if (caesarCipher.getCommand().equals(TypeOfCommandEnum.BRUTE_FORCE)) {
 
         } else {
             throw new RuntimeException("Invalid command");
