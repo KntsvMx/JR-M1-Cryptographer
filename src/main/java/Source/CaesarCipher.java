@@ -19,7 +19,12 @@ public class CaesarCipher {
     }
 
     public void setKey(String key) {
-        this.key = Integer.parseInt(key);
+        if (!(Integer.parseInt(key) < 0)) {
+            this.key = Integer.parseInt(key);
+        } else {
+            throw new IllegalArgumentException("Key is negative ");
+        }
+
     }
 
     public int getCountOfAlphabetLetters() {

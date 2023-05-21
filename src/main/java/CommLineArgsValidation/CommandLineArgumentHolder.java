@@ -22,25 +22,20 @@ public class CommandLineArgumentHolder {
     }
 
     public boolean validateArgument(String[] args) {
-        boolean checker = checkArgumentAreEmpty(args);
-        if (checker) {
+        if (args.length == 0) {
             console.workWithConsole();
             setCommand(console.getCommand());
             Path path = pathValidator.getAndValidation(console.getPath());
             caesarCipher.setPath(path);
             caesarCipher.setKey(console.getKey());
             return true;
-        } else {
+        } else  {
             setCommand(args[0]);
             Path path = pathValidator.getAndValidation(args);
             caesarCipher.setPath(path);
             caesarCipher.setKey(args[args.length-1]);
             return true;
         }
-    }
-
-    public boolean checkArgumentAreEmpty(String[] args) {
-        return args.length == 0;
     }
 
     public void setCommand(String command) {

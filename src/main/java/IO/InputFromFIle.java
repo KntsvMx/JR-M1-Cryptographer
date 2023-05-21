@@ -2,6 +2,7 @@ package IO;
 
 import Source.CaesarCipher;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -20,11 +21,15 @@ public class InputFromFIle {
     public ArrayList<StringBuilder> readFile() {
         ArrayList<String> builderArrayList;
         try {
-             builderArrayList = (ArrayList<String>) Files.readAllLines(caesarCipher.getPath(), StandardCharsets.UTF_8);
-             for (String line: builderArrayList) {
-                 buffer.add(new StringBuilder(line));
-             }
-             return buffer;
+            if (Files.exists(caesarCipher.getPath())) {
+                builderArrayList = (ArrayList<String>) Files.readAllLines(caesarCipher.getPath(), StandardCharsets.UTF_8);
+                for (String line : builderArrayList) {
+                    buffer.add(new StringBuilder(line));
+                }
+                return buffer;
+            } else {
+                throw new FileNotFoundException("File is not exist");
+            }
         } catch (IOException e) {
             throw new RuntimeException("Reading error" + e);
         }
