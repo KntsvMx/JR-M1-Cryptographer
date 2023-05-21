@@ -1,12 +1,17 @@
 package CommLineArgsValidation;
 
+import Console.Console;
 import Source.CaesarCipher;
 import Source.TypeOfCommandEnum;
 
+import java.nio.file.Path;
+
 public class CommandLineArgumentHolder {
     private static final CommandLineArgumentHolder INSTANCE = new CommandLineArgumentHolder();
-    private PathValidator pathValidator = PathValidator.getInstance();
-    private CaesarCipher caesarCipher = CaesarCipher.getInstance();
+    private final PathValidator pathValidator = PathValidator.getInstance();
+    private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
+
+    private final Console console = new Console();
 
 
     private CommandLineArgumentHolder() {
@@ -18,26 +23,26 @@ public class CommandLineArgumentHolder {
 
     public boolean validateArgument(String[] args) {
         boolean checker = checkArgumentAreEmpty(args);
-        if (!checker) {
-            setCommand(args[0]);
-            caesarCipher.setPath(pathValidator.getAndValidation(args[1]));
-            caesarCipher.setKey(args[2]);
+        if (checker) {
+            console.workWithConsole();
+            setCommand(console.getCommand());
+            Path path = pathValidator.getAndValidation(console.getPath());
+            caesarCipher.setPath(path);
+            caesarCipher.setKey(console.getKey());
             return true;
         } else {
-            return false;
+            setCommand(args[0]);
+            Path path = pathValidator.getAndValidation(args);
+            caesarCipher.setPath(path);
+            caesarCipher.setKey(args[args.length-1]);
+            return true;
         }
     }
 
     public boolean checkArgumentAreEmpty(String[] args) {
-        for (String argument: args) {
-            if (argument.isEmpty()) {
-                return true;
-            }
-        }
-        return false;
+        return args.length == 0;
     }
 
-// посмотреть за что отвечает contentEquals
     public void setCommand(String command) {
         if (command.equalsIgnoreCase("ENCRYPT")) {
             caesarCipher.setCommand(TypeOfCommandEnum.ENCRYPT);

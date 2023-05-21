@@ -2,23 +2,21 @@ package IO;
 
 import Source.CaesarCipher;
 
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.ArrayList;
 
 public class FileService {
     private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
-    private final InputFromFIle inputFromFIle = new InputFromFIle(caesarCipher.getPath());
-    private final OutputToFile outputToFile = new OutputToFile(caesarCipher.getPath());
 
-    private List<String> lines;
-
-    public List<String> readFromFile() {
-        lines = inputFromFIle.readFile();
-        return lines;
+    public ArrayList<StringBuilder> readFromFile() {
+        InputFromFIle inputFromFIle = new InputFromFIle(caesarCipher.getPath());
+        return inputFromFIle.readFile();
     }
 
-    public void writeToFileWithTag() {
-        outputToFile.nameOfFile(caesarCipher.getCommand());
-        outputToFile.writeToFile();
+    public void writeToFileWithTag(ArrayList<StringBuilder> lines) throws IOException {
+        OutputToFile outputToFile = new OutputToFile(caesarCipher.getPath());
+        Path path = outputToFile.nameOfFile(caesarCipher.getCommand());
+        outputToFile.writeToFile(path, lines);
     }
 }

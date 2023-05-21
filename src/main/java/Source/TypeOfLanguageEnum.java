@@ -2,5 +2,6 @@ package Source;
 
 public enum TypeOfLanguageEnum {
     UKRAINIAN,
-    EGNLISH
+    ENGLISH,
+    UNKNOWN
 }

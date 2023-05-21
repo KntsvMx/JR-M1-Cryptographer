@@ -1,8 +1,5 @@
 package Source;
 
-import CommLineArgsValidation.CommandLineArgumentHolder;
-import CommLineArgsValidation.PathValidator;
-
 import java.nio.file.Path;
 
 public class CaesarCipher {
@@ -12,11 +9,27 @@ public class CaesarCipher {
     private Path path;
     private TypeOfLanguageEnum language;
 
-    private CaesarCipher() {}
+    private int CountOfAlphabetLetters;
+
+    private CaesarCipher() {
+    }
 
     public static CaesarCipher getInstance() {
         return CAESARCIPHER;
     }
+
+    public void setKey(String key) {
+        this.key = Integer.parseInt(key);
+    }
+
+    public int getCountOfAlphabetLetters() {
+        return CountOfAlphabetLetters;
+    }
+
+    public void setCountOfAlphabetLetters(int CountOfAlphabetLetters) {
+        this.CountOfAlphabetLetters = CountOfAlphabetLetters;
+    }
+
 
     public TypeOfCommandEnum getCommand() {
         if (command == null)
@@ -31,13 +44,8 @@ public class CaesarCipher {
     public int getKey() {
         return this.key;
     }
-
-    public void setKey(String key) {
-        this.key = Integer.parseInt(key);
-    }
-
     public Path getPath() {
-        return  this.path;
+        return this.path;
     }
 
     public void setPath(Path path) {
