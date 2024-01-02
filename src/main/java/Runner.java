@@ -1,13 +1,10 @@
 import CommLineArgsValidation.CommandLineArgumentHolder;
 import Encryption.BruteForce;
-import Encryption.Decrypt;
-import Encryption.Encrypt;
+import Encryption.CipherHandler;
 import IO.FileService;
 import LanguageDetection.DetectionOfLanguage;
 import Source.CaesarCipher;
 import Source.TypeOfCommandEnum;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Runner {
@@ -15,8 +12,7 @@ public class Runner {
     private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
     private final CommandLineArgumentHolder commandLineArgumentHolder = CommandLineArgumentHolder.getInstance();
 
-    private final Encrypt encrypt = new Encrypt();
-    private final Decrypt decrypt = new Decrypt();
+    private final CipherHandler cipherHandler = new CipherHandler();
     private final BruteForce bruteForce = new BruteForce();
 
 
@@ -26,30 +22,26 @@ public class Runner {
         this.fileService = fileService;
     }
 
-    public void run(String[] args) throws IOException {
+    public void run(String[] args) {
         boolean isValidate = commandLineArgumentHolder.validateArgument(args);
         if (!isValidate)
             throw new RuntimeException("Validation have benn wrong.");
+        try {
+            if (!caesarCipher.getCommand().equals(TypeOfCommandEnum.BRUTE_FORCE)) {
+                ArrayList<StringBuilder> readFromFile = fileService.readFromFile();
+                detectionOfLanguage.detectLanguage(readFromFile);
+                readFromFile = cipherHandler.decryptLines(readFromFile, caesarCipher.getKey());
+                fileService.writeToFileWithTag(readFromFile);
+            } else {
+                ArrayList<StringBuilder> readFromFile = fileService.readFromFile();
+                detectionOfLanguage.detectLanguage(readFromFile);
+                readFromFile = bruteForce.attackBruteForce(readFromFile);
+                fileService.writeToFileWithTag(readFromFile);
+            }
 
-        if (caesarCipher.getCommand().equals(TypeOfCommandEnum.ENCRYPT)) {
-            ArrayList<StringBuilder> readFromFile = fileService.readFromFile();
-            detectionOfLanguage.detectLanguage(readFromFile);
-            readFromFile = encrypt.encryptLines(readFromFile, caesarCipher.getKey());
-            fileService.writeToFileWithTag(readFromFile);
-        } else if (caesarCipher.getCommand().equals(TypeOfCommandEnum.DECRYPT)) {
-            ArrayList<StringBuilder> readFromFile = fileService.readFromFile();
-            detectionOfLanguage.detectLanguage(readFromFile);
-            readFromFile = decrypt.decryptLines(readFromFile, caesarCipher.getKey());
-            fileService.writeToFileWithTag(readFromFile);
-        } else if (caesarCipher.getCommand().equals(TypeOfCommandEnum.BRUTE_FORCE)) {
-            ArrayList<StringBuilder> readFromFile = fileService.readFromFile();
-            detectionOfLanguage.detectLanguage(readFromFile);
-            readFromFile = bruteForce.attackBruteForce(readFromFile);
-            fileService.writeToFileWithTag(readFromFile);
-        } else {
+
+        } catch (Exception e) {
             throw new RuntimeException("Invalid command");
         }
-
-
     }
 }

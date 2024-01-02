@@ -21,14 +21,16 @@ public class Console {
 
     public void workWithConsole() {
         try(Scanner scanner = new Scanner(System.in)) {
-            System.out.print("Enter a command (ENCRYPT, DECRYPT): ");
+            System.out.print("Enter a command (ENCRYPT, DECRYPT, BRUTE_FORCE): ");
             command = scanner.nextLine();
 
             System.out.print("Enter a absolute path: ");
             path = scanner.nextLine();
 
-            System.out.print("Enter a key: ");
-            key = scanner.nextLine();
+            if (!command.equalsIgnoreCase("BRUTE_FORCE")) {
+                System.out.print("Enter a key: ");
+                key = scanner.nextLine();
+            }
         }
     }
 

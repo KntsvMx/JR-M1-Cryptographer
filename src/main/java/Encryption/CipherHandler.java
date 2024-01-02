@@ -1,13 +1,14 @@
 package Encryption;
 
 import Source.CaesarCipher;
+import Source.TypeOfCommandEnum;
 import Source.TypeOfLanguageEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Encrypt {
+public class CipherHandler {
     private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
     private static final String UKRAINIAN_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя";
     private static final Map<Character, Integer> UKRAINIAN_CHAR_TO_INDEX = new HashMap<>();
@@ -20,29 +21,30 @@ public class Encrypt {
         }
     }
 
-    public ArrayList<StringBuilder> encryptLines(ArrayList<StringBuilder> lines, int key) {
-        ArrayList<StringBuilder> encryptedLines = new ArrayList<>();
+    public ArrayList<StringBuilder> decryptLines(ArrayList<StringBuilder> lines, int key) {
+        ArrayList<StringBuilder> decryptedLines = new ArrayList<>();
 
         for (StringBuilder line : lines) {
-            StringBuilder encryptedLine = new StringBuilder();
+            StringBuilder decryptedLine = new StringBuilder();
 
             for (int i = 0; i < line.length(); i++) {
                 char currentChar = line.charAt(i);
 
                 if (Character.isLetter(currentChar)) {
-                    char encryptedChar = (char) encryptChar(currentChar, key);
-                    encryptedLine.append(encryptedChar);
+                    char decryptedChar = decryptChar(currentChar, key);
+                    decryptedLine.append(decryptedChar);
                 } else {
-                    encryptedLine.append(currentChar);
+                    decryptedLine.append(currentChar);
                 }
             }
 
-            encryptedLines.add(encryptedLine);
+            decryptedLines.add(decryptedLine);
         }
 
-        return encryptedLines;
+        return decryptedLines;
     }
-    private char encryptChar(char letter, int key) {
+
+    private char decryptChar(char letter, int key) {
         TypeOfLanguageEnum typeLanguage = caesarCipher.getLanguage();
 
         if (Character.isLowerCase(letter) || Character.isUpperCase(letter)) {
@@ -76,7 +78,9 @@ public class Encrypt {
                 charIndex = letter - offset;
             }
 
-            int encryptedIndex = (charIndex + key) % alphabetSize;
+            int encryptedIndex = encryptedIndex(charIndex, key, alphabetSize);
+
+
             if (encryptedIndex < 0) {
                 encryptedIndex += alphabetSize;
             }
@@ -91,5 +95,18 @@ public class Encrypt {
 
         return letter;
     }
+
+    private int encryptedIndex(int charIndex, int key, int alphabetSize) {
+        if (caesarCipher.getCommand().equals(TypeOfCommandEnum.ENCRYPT))
+            return (charIndex + key) % alphabetSize;
+        else
+            return (charIndex - key) % alphabetSize;
+    }
+
 }
+
+
+
+
+
 

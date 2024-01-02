@@ -27,15 +27,17 @@ public class CommandLineArgumentHolder {
             setCommand(console.getCommand());
             Path path = pathValidator.getAndValidation(console.getPath());
             caesarCipher.setPath(path);
-            caesarCipher.setKey(console.getKey());
-            return true;
         } else  {
             setCommand(args[0]);
             Path path = pathValidator.getAndValidation(args);
             caesarCipher.setPath(path);
-            caesarCipher.setKey(args[args.length-1]);
-            return true;
         }
+
+        if (caesarCipher.getCommand() != TypeOfCommandEnum.BRUTE_FORCE)
+            caesarCipher.setKey(console.getKey());
+        else
+            caesarCipher.setKey("0");
+        return true;
     }
 
     public void setCommand(String command) {

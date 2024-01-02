@@ -10,9 +10,7 @@ import java.util.Map;
 
 public class BruteForce {
     private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
-    private final Decrypt decrypt = new Decrypt();
-    private static final String UKRAINIAN_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя";
-    private static final Map<Character, Integer> UKRAINIAN_CHAR_TO_INDEX = new HashMap<>();
+    private final CipherHandler cipherHandler = new CipherHandler();
     private static final Map<Character, Double> UKRAINIAN_CHAR_FREQUENCY = new HashMap<>();
     private static final Map<Character, Double> ENGLISH_CHAR_FREQUENCY = new HashMap<>();
 
@@ -82,13 +80,6 @@ public class BruteForce {
         ENGLISH_CHAR_FREQUENCY.put('z', 0.0007);
     }
 
-    static {
-        for (int i = 0; i < UKRAINIAN_ALPHABET.length(); i++) {
-            char c = UKRAINIAN_ALPHABET.charAt(i);
-            UKRAINIAN_CHAR_TO_INDEX.put(c, i);
-            UKRAINIAN_CHAR_TO_INDEX.put(Character.toUpperCase(c), i);
-        }
-    }
 
     public ArrayList<StringBuilder> attackBruteForce(ArrayList<StringBuilder> lines) {
         ArrayList<StringBuilder> decrypted = null;
@@ -96,7 +87,7 @@ public class BruteForce {
         int bestKey = 0;
 
         for (int i = 0; i < caesarCipher.getCountOfAlphabetLetters(); i++) {
-            decrypted = decrypt.decryptLines(lines, i);
+            decrypted = cipherHandler.decryptLines(lines, i);
             double score = calculateDecryptionScore(decrypted);
 
             if (score < bestScore) {
@@ -106,7 +97,7 @@ public class BruteForce {
         }
 
         System.out.println("Successful decryption with key: " + bestKey);
-        return decrypt.decryptLines(lines, bestKey);
+        return cipherHandler.decryptLines(lines, bestKey);
     }
 
     private int calculateDecryptionScore(ArrayList<StringBuilder> decryptedLines) {
@@ -166,7 +157,7 @@ public class BruteForce {
             }
 
             double diff = Math.abs(observedFrequency - expectedFrequency);
-            score += diff * diff; // Using square of the difference to give more weight to larger deviations.
+            score += diff * diff;
         }
 
         return score;
