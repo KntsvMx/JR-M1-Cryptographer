@@ -43,7 +43,7 @@ public class CommandLineArgumentHolder {
             caesarCipher.setCommand(TypeOfCommandEnum.ENCRYPT);
         } else if (command.equalsIgnoreCase("DECRYPT")) {
             caesarCipher.setCommand(TypeOfCommandEnum.DECRYPT);
-        } else if (command.equalsIgnoreCase("BRUTE_FROCE")) {
+        } else if (command.equalsIgnoreCase("BRUTE_FORCE")) {
             caesarCipher.setCommand(TypeOfCommandEnum.BRUTE_FORCE);
         } else {
             throw new IllegalArgumentException("Any argument didn't match");

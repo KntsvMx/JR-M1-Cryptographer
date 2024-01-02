@@ -23,9 +23,8 @@ public class DetectionOfLanguage {
         Pattern ukrainianPattern = Pattern.compile("[\\p{IsCyrillic}&&[^Ёё]]+");
         Pattern englishPattern = Pattern.compile("[\\p{IsLatin}]+");
 
-        // Проверка языка
-        boolean isUkrainian = ukrainianPattern.matcher(lines.get(1)).find();
-        boolean isEnglish = englishPattern.matcher(lines.get(1)).find();
+        boolean isUkrainian = ukrainianPattern.matcher(lines.get(0)).find();
+        boolean isEnglish = englishPattern.matcher(lines.get(0)).find();
 
         if (isUkrainian && !isEnglish) {
             caesarCipher.setLanguage(TypeOfLanguageEnum.UKRAINIAN);

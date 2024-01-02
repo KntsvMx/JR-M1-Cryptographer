@@ -42,10 +42,10 @@ public class Runner {
             readFromFile = decrypt.decryptLines(readFromFile, caesarCipher.getKey());
             fileService.writeToFileWithTag(readFromFile);
         } else if (caesarCipher.getCommand().equals(TypeOfCommandEnum.BRUTE_FORCE)) {
-//            ArrayList<StringBuilder> readFromFile = fileService.readFromFile();
-//            detectionOfLanguage.detectLanguage(readFromFile);
-//            readFromFile = encrypt.encryptLines(readFromFile, caesarCipher.getKey());
-//            fileService.writeToFileWithTag(readFromFile);
+            ArrayList<StringBuilder> readFromFile = fileService.readFromFile();
+            detectionOfLanguage.detectLanguage(readFromFile);
+            readFromFile = bruteForce.attackBruteForce(readFromFile);
+            fileService.writeToFileWithTag(readFromFile);
         } else {
             throw new RuntimeException("Invalid command");
         }
