@@ -11,11 +11,8 @@ public class Runner {
     private final FileService fileService;
     private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
     private final CommandLineArgumentHolder commandLineArgumentHolder = CommandLineArgumentHolder.getInstance();
-
     private final CipherHandler cipherHandler = new CipherHandler();
     private final BruteForce bruteForce = new BruteForce();
-
-
     private final DetectionOfLanguage detectionOfLanguage = DetectionOfLanguage.getInstance();
 
     public Runner(FileService fileService) {
