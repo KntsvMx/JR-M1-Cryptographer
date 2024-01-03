@@ -4,6 +4,7 @@ import Source.CaesarCipher;
 import Source.TypeOfLanguageEnum;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class DetectionOfLanguage {
@@ -20,21 +21,43 @@ public class DetectionOfLanguage {
     }
 
     public void detectLanguage(ArrayList<StringBuilder> lines) {
-        Pattern ukrainianPattern = Pattern.compile("[\\p{IsCyrillic}&&[^Ёё]]+");
-        Pattern englishPattern = Pattern.compile("[\\p{IsLatin}]+");
+        Optional<StringBuilder> firstLine = lines.stream().findFirst();
 
-        boolean isUkrainian = ukrainianPattern.matcher(lines.get(0)).find();
-        boolean isEnglish = englishPattern.matcher(lines.get(0)).find();
+        firstLine.ifPresent(line -> {
+            Pattern ukrainianPattern = Pattern.compile("\\p{IsCyrillic}&&[^Ёё]+");
+            Pattern englishPattern = Pattern.compile("\\p{IsLatin}+");
 
+            boolean isUkrainian = ukrainianPattern.matcher(lines.get(0)).find();
+            boolean isEnglish = englishPattern.matcher(lines.get(0)).find();
+
+            setLanguageBasedOnDetection(isUkrainian, isEnglish);
+        });
+    }
+
+    private void setLanguageBasedOnDetection(boolean isUkrainian, boolean isEnglish) {
         if (isUkrainian && !isEnglish) {
-            caesarCipher.setLanguage(TypeOfLanguageEnum.UKRAINIAN);
-            caesarCipher.setCountOfAlphabetLetters(33);
+            setUkrainianLanguage();
         } else if (!isUkrainian && isEnglish) {
-            caesarCipher.setLanguage(TypeOfLanguageEnum.ENGLISH);
-            caesarCipher.setCountOfAlphabetLetters(26);
+            setEnglishLanguage();
         } else {
-            caesarCipher.setLanguage(TypeOfLanguageEnum.UNKNOWN);
-            caesarCipher.setCountOfAlphabetLetters(0);
+            setUnknownLanguage();
         }
     }
+
+    private void setUnknownLanguage() {
+        caesarCipher.setLanguage(TypeOfLanguageEnum.UNKNOWN);
+        caesarCipher.setCountOfAlphabetLetters(0);
+    }
+
+    private void setEnglishLanguage() {
+        caesarCipher.setLanguage(TypeOfLanguageEnum.ENGLISH);
+        caesarCipher.setCountOfAlphabetLetters(26);
+    }
+
+    private void setUkrainianLanguage() {
+        caesarCipher.setLanguage(TypeOfLanguageEnum.UKRAINIAN);
+        caesarCipher.setCountOfAlphabetLetters(33);
+    }
+
+
 }
