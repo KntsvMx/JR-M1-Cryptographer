@@ -7,11 +7,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.sql.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OutputToFile {
-    private Path path;
+    private final Path path;
 
     public OutputToFile(Path path) {
         this.path = path;
@@ -22,7 +22,6 @@ public class OutputToFile {
             case DECRYPT -> "[ DECRYPT ]";
             case ENCRYPT -> "[ ENCRYPT ]";
             case BRUTE_FORCE -> "[ BRUTE_FORCE ]";
-            default -> throw new IllegalStateException("Unexpected value: " + tag);
         };
 
         return renameFile(prefix);
@@ -32,20 +31,8 @@ public class OutputToFile {
         String fileName = path.getFileName().toString();
         int dotIndex = fileName.lastIndexOf(".");
 
-
-
         if (dotIndex != -1) {
-            String nameWithoutExtension = fileName.substring(0, dotIndex);
-            String extension = fileName.substring(dotIndex);
-
-            int openingBracketIndex = nameWithoutExtension.lastIndexOf("[");
-            int closingBracketIndex = nameWithoutExtension.lastIndexOf("]");
-
-            if (openingBracketIndex != -1 && closingBracketIndex != -1 && closingBracketIndex == nameWithoutExtension.length() - 1) {
-                nameWithoutExtension = nameWithoutExtension.substring(0, openingBracketIndex);
-            }
-
-            String newFileName = nameWithoutExtension + tag + extension;
+            String newFileName = getNewFileName(tag, fileName, dotIndex);
 
             Path targetFile = path.resolveSibling(newFileName);
 
@@ -63,10 +50,29 @@ public class OutputToFile {
     }
 
     public void writeToFile(Path path, ArrayList<StringBuilder> lines) throws IOException {
-        ArrayList<String> stringLines = new ArrayList<>();
+        List<String> stringLines = new ArrayList<>();
         for (StringBuilder line : lines) {
             stringLines.add(line.toString());
         }
-        Files.write(path, stringLines, StandardCharsets.UTF_8);
+        try {
+            Files.write(path, stringLines, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new IOException("Error writing to file" + e.getMessage());
+        }
+
+    }
+
+    private String getNewFileName(String tag, String fileName, int dotIndex) {
+        String nameWithoutExtension = fileName.substring(0, dotIndex);
+        String extension = fileName.substring(dotIndex);
+
+        int openingBracketIndex = nameWithoutExtension.lastIndexOf("[");
+        int closingBracketIndex = nameWithoutExtension.lastIndexOf("]");
+
+        if (openingBracketIndex != -1 && closingBracketIndex != -1 && closingBracketIndex == nameWithoutExtension.length() - 1) {
+            nameWithoutExtension = nameWithoutExtension.substring(0, openingBracketIndex);
+        }
+
+        return nameWithoutExtension + tag + extension;
     }
 }
