@@ -10,7 +10,7 @@ public class FileService {
     private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
 
     public ArrayList<StringBuilder> readFromFile() {
-        InputFromFIle inputFromFIle = new InputFromFIle(caesarCipher.getPath());
+        InputFromFIle inputFromFIle = new InputFromFIle();
         return inputFromFIle.readFile();
     }
 

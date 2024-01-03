@@ -23,21 +23,27 @@ public class CommandLineArgumentHolder {
 
     public boolean validateArgument(String[] args) {
         if (args.length == 0) {
-            console.workWithConsole();
-            setCommand(console.getCommand());
-            Path path = pathValidator.getAndValidation(console.getPath());
-            caesarCipher.setPath(path);
+            workWithConsole();
         } else  {
-            setCommand(args[0]);
-            Path path = pathValidator.getAndValidation(args);
-            caesarCipher.setPath(path);
+            workWithArgs(args);
         }
+        return true;
+    }
 
+    private void workWithArgs(String[] args) {
+        setCommand(args[0]);
+        Path path = pathValidator.getAndValidation(args);
+        caesarCipher.setPath(path);
+    }
+
+    private void workWithConsole() {
+        console.workWithConsole();
+        setCommand(console.getCommand());
+        caesarCipher.setPath(pathValidator.getAndValidation(console.getPath()));
         if (caesarCipher.getCommand() != TypeOfCommandEnum.BRUTE_FORCE)
             caesarCipher.setKey(console.getKey());
         else
             caesarCipher.setKey("0");
-        return true;
     }
 
     public void setCommand(String command) {

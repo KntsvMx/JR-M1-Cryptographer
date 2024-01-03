@@ -1,7 +1,7 @@
 package CommLineArgsValidation;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class PathValidator {
     private static final PathValidator VALIDATOR = new PathValidator();
@@ -16,40 +16,24 @@ public class PathValidator {
     }
 
     public Path getAndValidation(String[] stringPath) {
+        validateInput(stringPath);
         Path validatedPath = convertToPath(stringPath);
-        if (!validatePath(validatedPath)) {
-            try {
-                this.path = convertToAbsolute(validatedPath);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Failed to convert path to absolute: " + stringPath, e);
-            }
-        }
-        return this.path = validatedPath;
+        processInvalidPath(validatedPath);
+        return this.path;
     }
 
     public Path getAndValidation(String stringPath) {
+        validateInput(stringPath);
         Path validatedPath = convertToPath(stringPath);
-        if (!validatePath(validatedPath)) {
-            try {
-                this.path = convertToAbsolute(validatedPath);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Failed to convert path to absolute: " + stringPath, e);
-            }
-        }
-        return this.path = validatedPath;
+        processInvalidPath(validatedPath);
+        return this.path;
     }
 
     private Path convertToPath(String[] stringPath) {
-        StringBuilder path = new StringBuilder();
-        for (String temp : stringPath) {
-            if (temp.isEmpty()) {
-                throw new IllegalArgumentException("Empty string path");
-            }
+        String sanitizedPath = String.join(" ", Arrays.copyOfRange(stringPath, 1, stringPath.length)).replaceAll("\\s+$", "");
+        if (sanitizedPath.isEmpty()) {
+            throw new IllegalArgumentException("Empty string path");
         }
-        for (int i = 1; i < stringPath.length - 1; i++) {
-            path.append(stringPath[i]).append(" ");
-        }
-        String sanitizedPath = path.toString().replaceAll("\\s+$", "");
         return Path.of(sanitizedPath);
     }
 
@@ -58,7 +42,30 @@ public class PathValidator {
             throw new IllegalArgumentException("Empty string path");
         }
         String sanitizedPath = stringPath.replaceAll("\\s+$", "");
-        return Paths.get(sanitizedPath);
+        return Path.of(sanitizedPath);
+    }
+
+    private void validateInput(String[] stringPath) {
+        if (stringPath == null || stringPath.length < 2)
+            throw new IllegalArgumentException("Invalid input: " + Arrays.toString(stringPath));
+    }
+
+    private void validateInput(String stringPath) {
+        if (stringPath == null || stringPath.trim().isEmpty())
+            throw new IllegalArgumentException("Invalid input: " + stringPath);
+
+    }
+
+    private void processInvalidPath(Path validatedPath) {
+        if (!validatePath(validatedPath)) {
+            try {
+                this.path = convertToAbsolute(validatedPath);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Failed to convert path to absolute: " + validatedPath, e);
+            }
+        } else {
+            this.path = validatedPath;
+        }
     }
 
     private boolean validatePath(Path path) {

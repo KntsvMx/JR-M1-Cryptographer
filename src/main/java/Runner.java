@@ -38,8 +38,6 @@ public class Runner {
                 readFromFile = bruteForce.attackBruteForce(readFromFile);
                 fileService.writeToFileWithTag(readFromFile);
             }
-
-
         } catch (Exception e) {
             throw new RuntimeException("Invalid command");
         }

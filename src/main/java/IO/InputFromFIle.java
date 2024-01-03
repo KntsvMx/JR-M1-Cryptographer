@@ -6,15 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
 
 public class InputFromFIle {
     private final ArrayList<StringBuilder> buffer;
     private final CaesarCipher caesarCipher = CaesarCipher.getInstance();
 
-    public InputFromFIle(Path path) {
+    public InputFromFIle() {
         buffer = new ArrayList<>();
     }
 
