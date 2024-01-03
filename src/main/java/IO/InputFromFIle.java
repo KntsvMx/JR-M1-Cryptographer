@@ -2,10 +2,11 @@ package IO;
 
 import Source.CaesarCipher;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 public class InputFromFIle {
@@ -17,19 +18,16 @@ public class InputFromFIle {
     }
 
     public ArrayList<StringBuilder> readFile() {
-        ArrayList<String> builderArrayList;
-        try {
-            if (Files.exists(caesarCipher.getPath())) {
-                builderArrayList = (ArrayList<String>) Files.readAllLines(caesarCipher.getPath(), StandardCharsets.UTF_8);
-                for (String line : builderArrayList) {
-                    buffer.add(new StringBuilder(line));
-                }
-                return buffer;
-            } else {
-                throw new FileNotFoundException("File is not exist");
+        try (BufferedReader reader = Files.newBufferedReader(caesarCipher.getPath(), StandardCharsets.UTF_8)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.add(new StringBuilder(line));
             }
+            return buffer;
+        } catch (NoSuchFileException e) {
+            throw new RuntimeException("File doesn't exist: " + e.getMessage());
         } catch (IOException e) {
-            throw new RuntimeException("Reading error" + e);
+            throw new RuntimeException("Error reading file: " + e.getMessage());
         }
     }
 }
